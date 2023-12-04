@@ -1,9 +1,17 @@
+server:
+  port: 8080
+
 spring:
   datasource:
-    driver-class-name: org.hsqldb.jdbc.JDBCDriver
-    url: jdbc:hsqldb:hsql://localhost/testdb
-    username: sa
-    password: password
+    username: ${DEV_DB_USERNAME}
+    password: ${DEV_DB_PASSWORD}
+    url: jdbc:mysql://188.68.236.142:3306/kotlin_demo?useUnicode=true&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=Europe/Warsaw
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        format_sql: false
+        show-sql: true
+
