@@ -15,7 +15,7 @@ data class Credit(
         @Column(name = "credit_name")
         val creditName: String,
 
-        @Column(name = " customer_id")
+        @Column(name = "customer_id")
         val customerId: Long,
 
         @Column(name = "credit_value")
