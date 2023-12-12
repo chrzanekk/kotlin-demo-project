@@ -20,6 +20,8 @@ class MockCustomerRepositoryTest {
 
         //then
         Assertions.assertThat(customer.personalNumber).isEqualTo(personalNumber)
+        Assertions.assertThat(customer.firstName).isNotEmpty()
+        Assertions.assertThat(customer.lastName).isNotEmpty()
 
     }
 
