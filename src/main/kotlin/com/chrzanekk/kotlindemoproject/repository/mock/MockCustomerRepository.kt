@@ -2,20 +2,29 @@ package com.chrzanekk.kotlindemoproject.repository.mock
 
 import com.chrzanekk.kotlindemoproject.domain.Customer
 import com.chrzanekk.kotlindemoproject.repository.CustomerRepository
+import org.hibernate.ObjectNotFoundException
 import org.springframework.data.domain.Example
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.query.FluentQuery
 import org.springframework.stereotype.Repository
+import java.lang.RuntimeException
 import java.util.*
 import java.util.function.Function
+
 @Repository
 class MockCustomerRepository : CustomerRepository {
 
-    val customers = mutableListOf<Customer>()
+    val customers = mutableListOf<Customer>(
+        Customer(1L, "John", "Doe", "838383"),
+        Customer(2L, "Jimmy", "Smith", "848484"),
+        Customer(3L, "Charlotte", "Firecracker", "858585")
+    )
+
     override fun findByPersonalNumber(personalNumber: String): Customer {
-        TODO("Not yet implemented")
+        return customers.find { c -> c.personalNumber == personalNumber }
+            ?: throw RuntimeException()
     }
 
     override fun <S : Customer?> save(entity: S & Any): S & Any {
