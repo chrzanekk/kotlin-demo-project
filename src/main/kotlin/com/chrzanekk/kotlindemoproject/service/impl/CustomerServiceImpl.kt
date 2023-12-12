@@ -6,10 +6,11 @@ import com.chrzanekk.kotlindemoproject.service.CustomerService
 import org.springframework.stereotype.Service
 
 @Service
-class CustomerServiceImpl : CustomerService {
-
+class CustomerServiceImpl(
+    private val customerRepository: CustomerRepository
+) : CustomerService {
 
     override fun findByPersonalNumber(personalNumber: String): Customer {
-        TODO("Not yet implemented")
+        return customerRepository.findByPersonalNumber(personalNumber)
     }
 }
