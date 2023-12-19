@@ -1,6 +1,6 @@
-package com.chrzanekk.kotlindemoproject.service.dto
+package com.chrzanekk.kotlindemoproject.payload
 
-data class CustomerDTO(
+data class NewCustomerResponse(
     val id: Long,
     val firstName: String,
     val lastName: String,
