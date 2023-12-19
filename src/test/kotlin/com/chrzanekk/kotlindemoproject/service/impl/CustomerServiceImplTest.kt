@@ -9,7 +9,7 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
 internal class CustomerServiceImplTest {
-    private val mockCustomerRepository: MockCustomerRepository = mockk()
+    private val mockCustomerRepository: MockCustomerRepository = mockk(relaxed = true)
     private val customerServiceImpl = CustomerServiceImpl(mockCustomerRepository)
 
     @Test

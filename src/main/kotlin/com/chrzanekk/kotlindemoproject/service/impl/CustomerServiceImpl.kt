@@ -10,7 +10,7 @@ class CustomerServiceImpl(
     private val customerRepository: CustomerRepository
 ) : CustomerService {
 
-    override fun findByPersonalNumber(personalNumber: String): Customer {
-        return customerRepository.findByPersonalNumber(personalNumber)
-    }
+    override fun findByPersonalNumber(personalNumber: String): Customer =
+        customerRepository.findByPersonalNumber(personalNumber)
+
 }
