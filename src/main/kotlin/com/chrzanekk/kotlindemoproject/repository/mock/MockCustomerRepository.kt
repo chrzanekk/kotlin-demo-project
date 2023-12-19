@@ -16,7 +16,7 @@ import java.util.function.Function
 @Repository
 class MockCustomerRepository : CustomerRepository {
 
-    val customers = mutableListOf<Customer>(
+    val customers = mutableListOf(
         Customer(1L, "John", "Doe", "838383"),
         Customer(2L, "Jimmy", "Smith", "848484"),
         Customer(3L, "Charlotte", "Firecracker", "858585")
