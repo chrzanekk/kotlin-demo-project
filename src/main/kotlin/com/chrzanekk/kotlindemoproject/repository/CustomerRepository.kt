@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository
 interface CustomerRepository : JpaRepository<Customer, Long> {
 
     fun findByPersonalNumber(personalNumber: String): Customer
+
 }

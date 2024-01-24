@@ -10,7 +10,7 @@ import java.math.BigDecimal
 @Entity
 data class Credit(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Long,
+        val id: Long? = null,
 
         @Column(name = "credit_name")
         val creditName: String,
