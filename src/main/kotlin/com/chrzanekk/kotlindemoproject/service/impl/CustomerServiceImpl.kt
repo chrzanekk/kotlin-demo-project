@@ -16,8 +16,18 @@ class CustomerServiceImpl(
 ) : CustomerService {
 
     override fun findByPersonalNumber(searchCustomerRequest: SearchCustomerRequest): CustomerDTO {
-        val customer = customerRepository.findByPersonalNumber(searchCustomerRequest.personalNumber)
-        return CustomerDTO(customer.id, customer.firstName, customer.lastName, customer.personalNumber)
+        val customer: Customer? = customerRepository.findByPersonalNumber(searchCustomerRequest.personalNumber)
+        customer?.let {
+            return CustomerDTO(
+                customer.id,
+                customer.firstName,
+                customer.lastName,
+                customer.personalNumber
+            )
+        }
+            ?: run {
+                throw NoSuchElementException("Customer not found")
+            }
     }
 
     override fun createCustomer(newCustomerRequest: NewCustomerRequest): CustomerDTO {
