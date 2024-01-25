@@ -8,7 +8,7 @@ import com.chrzanekk.kotlindemoproject.service.dto.CustomerDTO
 
 interface CustomerService {
 
-    fun findByPersonalNumber(searchCustomerRequest: SearchCustomerRequest): CustomerDTO
+    fun findByPersonalNumber(newCustomerRequest: NewCustomerRequest): CustomerDTO
 
     fun createCustomer(newCustomerRequest: NewCustomerRequest): CustomerDTO
 
