@@ -35,6 +35,7 @@ class CustomerServiceImplTest {
         assertEquals(customerDTO, result)
     }
 
+    //todo findount if this test and implementation are correct
     @Test
     fun whenFindByPersonalNumber_thenThrowException() {
         //GIVEN
