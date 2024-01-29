@@ -15,9 +15,9 @@ class CustomerServiceImpl(
     private val customerRepository: CustomerRepository
 ) : CustomerService {
 
-    override fun findByPersonalNumber(newCustomerRequest: NewCustomerRequest): CustomerDTO {
-        val customer: Customer? = customerRepository.findByPersonalNumber(newCustomerRequest.personalNumber)
-        customer?.let {
+    override fun findByPersonalNumber(searchCustomerRequest: SearchCustomerRequest): CustomerDTO {
+        val customer: Customer = customerRepository.findByPersonalNumber(searchCustomerRequest.personalNumber)
+        customer.let {
             return CustomerDTO(
                 customer.id,
                 customer.firstName,
@@ -25,16 +25,13 @@ class CustomerServiceImpl(
                 customer.personalNumber
             )
         }
-            ?: run {
-                return createCustomer(newCustomerRequest)
-            }
     }
 
     override fun createCustomer(newCustomerRequest: NewCustomerRequest): CustomerDTO {
 
         val customer = customerRepository.save(
             Customer(
-                null, newCustomerRequest.firstName, newCustomerRequest.lastName,
+                0, newCustomerRequest.firstName, newCustomerRequest.lastName,
                 newCustomerRequest.personalNumber
             )
         )

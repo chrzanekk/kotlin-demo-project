@@ -57,7 +57,7 @@ class CustomerServiceImplTest {
     @Test
     fun whenCreateCustomer_thenReturnCustomerWithId() {
         //given
-        val customerToSave = Customer(null, "John", "Doe", "838383")
+        val customerToSave = Customer(0L, "John", "Doe", "838383")
         val savedCustomer = Customer(1L, "John", "Doe", "838383")
         val customerDTO = CustomerDTO(
             savedCustomer.id, savedCustomer.firstName, savedCustomer.lastName, savedCustomer
