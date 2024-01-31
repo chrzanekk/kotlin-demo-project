@@ -13,6 +13,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.springframework.dao.EmptyResultDataAccessException
 
 class CustomerServiceImplTest {
     private val customerRepository: CustomerRepository = mockk()
@@ -35,18 +36,18 @@ class CustomerServiceImplTest {
         assertEquals(customerDTO, result)
     }
 
-    //todo findount if this test and implementation are correct
     @Test
     fun whenFindByPersonalNumber_thenThrowException() {
         //GIVEN
         val personalNumber = "838383"
-        every { customerRepository.findByPersonalNumber(personalNumber) } throws NoSuchElementException()
+        every { customerRepository.findByPersonalNumber(personalNumber) } throws (EmptyResultDataAccessException
+        ("Customer not found",1))
 
         //WHEN
         var exceptionThrown = false
         try {
             customerServiceImpl.findByPersonalNumber(SearchCustomerRequest(personalNumber))
-        } catch (exception: NoSuchElementException) {
+        } catch (exception: EmptyResultDataAccessException) {
             exceptionThrown = true
         }
         assertTrue(exceptionThrown)

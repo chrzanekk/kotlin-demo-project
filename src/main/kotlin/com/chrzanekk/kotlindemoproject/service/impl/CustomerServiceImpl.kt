@@ -8,6 +8,7 @@ import com.chrzanekk.kotlindemoproject.payload.SearchCustomerRequest
 import com.chrzanekk.kotlindemoproject.repository.CustomerRepository
 import com.chrzanekk.kotlindemoproject.service.CustomerService
 import com.chrzanekk.kotlindemoproject.service.dto.CustomerDTO
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,14 +18,8 @@ class CustomerServiceImpl(
 
     override fun findByPersonalNumber(searchCustomerRequest: SearchCustomerRequest): CustomerDTO {
         val customer: Customer = customerRepository.findByPersonalNumber(searchCustomerRequest.personalNumber)
-        customer.let {
-            return CustomerDTO(
-                customer.id,
-                customer.firstName,
-                customer.lastName,
-                customer.personalNumber
-            )
-        }
+            ?: throw EmptyResultDataAccessException("Customer not found", 1)
+        return CustomerDTO(customer.id, customer.firstName, customer.lastName, customer.personalNumber)
     }
 
     override fun createCustomer(newCustomerRequest: NewCustomerRequest): CustomerDTO {
