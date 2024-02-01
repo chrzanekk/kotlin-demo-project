@@ -1,3 +1,6 @@
 package com.chrzanekk.kotlindemoproject.payload
 
-data class GetCreditResponse(val credits: List<GetCreditRequest>)
+import com.chrzanekk.kotlindemoproject.service.dto.CreditDTO
+import com.chrzanekk.kotlindemoproject.service.dto.CustomerDTO
+
+data class GetCreditResponse(val customerDTO: CustomerDTO, val creditDTO: CreditDTO)
