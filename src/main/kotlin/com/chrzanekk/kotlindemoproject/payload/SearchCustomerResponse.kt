@@ -1,5 +1,8 @@
 package com.chrzanekk.kotlindemoproject.payload
 
-import com.chrzanekk.kotlindemoproject.service.dto.CustomerDTO
-
-data class SearchCustomerResponse(val searchResult: CustomerDTO)
+data class SearchCustomerResponse(
+    val id: Long,
+    val firstName: String,
+    val lastName: String,
+    val personalNumber: String
+)

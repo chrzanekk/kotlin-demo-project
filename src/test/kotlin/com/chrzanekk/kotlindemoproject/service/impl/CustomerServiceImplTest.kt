@@ -1,10 +1,7 @@
 package com.chrzanekk.kotlindemoproject.service.impl
 
 import com.chrzanekk.kotlindemoproject.domain.Customer
-import com.chrzanekk.kotlindemoproject.payload.GetCustomersRequest
-import com.chrzanekk.kotlindemoproject.payload.GetCustomersResponse
-import com.chrzanekk.kotlindemoproject.payload.NewCustomerRequest
-import com.chrzanekk.kotlindemoproject.payload.SearchCustomerRequest
+import com.chrzanekk.kotlindemoproject.payload.*
 import com.chrzanekk.kotlindemoproject.repository.CustomerRepository
 import com.chrzanekk.kotlindemoproject.service.dto.CustomerDTO
 import io.mockk.every
@@ -25,7 +22,7 @@ class CustomerServiceImplTest {
         //given
         val personalNumber = "838383"
         val customer = Customer(1L, "John", "Doe", personalNumber)
-        val customerDTO = CustomerDTO(customer.id, customer.firstName, customer.lastName, customer.personalNumber)
+        val customerDTO = SearchCustomerResponse(customer.id, customer.firstName, customer.lastName, customer.personalNumber)
         every { customerRepository.findByPersonalNumber(personalNumber) } returns customer
 
         //when
@@ -61,7 +58,7 @@ class CustomerServiceImplTest {
         //given
         val customerToSave = Customer(0L, "John", "Doe", "838383")
         val savedCustomer = Customer(1L, "John", "Doe", "838383")
-        val customerDTO = CustomerDTO(
+        val customerDTO = NewCustomerResponse(
             savedCustomer.id, savedCustomer.firstName, savedCustomer.lastName, savedCustomer
                 .personalNumber
         )

@@ -15,21 +15,27 @@ class CreditServiceImpl(
 ) : CreditService {
     override fun createCredit(newCreditRequest: NewCreditRequest): NewCreditResponse {
         val customerDTO: CustomerDTO = try {
-            val savedCustomerDTO = customerService.findByPersonalNumber(
+            val searchCustomerResponse = customerService.findByPersonalNumber(
                 SearchCustomerRequest(
                     newCreditRequest.customerDTO.personalNumber
                 )
             )
-            savedCustomerDTO
+            CustomerDTO(
+                searchCustomerResponse.id, searchCustomerResponse.firstName, searchCustomerResponse.lastName,
+                searchCustomerResponse.personalNumber
+            )
         } catch (e: EmptyResultDataAccessException) {
-            val newCustomerDTO = customerService.createCustomer(
+            val newCustomerResponse = customerService.createCustomer(
                 NewCustomerRequest(
                     newCreditRequest.customerDTO
                         .firstName,
                     newCreditRequest.customerDTO.lastName, newCreditRequest.customerDTO.personalNumber
                 )
             )
-            newCustomerDTO
+            CustomerDTO(
+                newCustomerResponse.id, newCustomerResponse.firstName, newCustomerResponse.lastName,
+                newCustomerResponse.personalNumber
+            )
         }
 
         val credit = Credit(
@@ -42,21 +48,28 @@ class CreditServiceImpl(
     }
 
     private fun convertEntityToDTO(credits: List<Credit>): List<CreditDTO> {
-        return credits.map { credit: Credit -> CreditDTO(credit.id, credit.creditName, credit.customerId, credit.creditValue) }
+        return credits.map { credit: Credit ->
+            CreditDTO(
+                credit.id,
+                credit.creditName,
+                credit.customerId,
+                credit.creditValue
+            )
+        }
     }
 
     override fun findAll(): GetCreditsResponse {
         val creditDTOList = convertEntityToDTO(creditRepository.findAll())
-        val customerIds : List<Long> = creditDTOList.map { it.customerId }.distinct()
+        val customerIds: List<Long> = creditDTOList.map { it.customerId }.distinct()
         val listOfCustomers = customerService.findAllCustomers(GetCustomersRequest(customerIds))
         val listOfCreditsResponse = mutableListOf<GetCreditResponse>()
         for (credit in creditDTOList) {
             for (customer in listOfCustomers.customers) {
-                if(credit.customerId == customer.id) {
-                    listOfCreditsResponse.add(GetCreditResponse(customer,credit))
+                if (credit.customerId == customer.id) {
+                    listOfCreditsResponse.add(GetCreditResponse(customer, credit))
                 }
             }
         }
         return GetCreditsResponse(listOfCreditsResponse)
-        }
+    }
 }

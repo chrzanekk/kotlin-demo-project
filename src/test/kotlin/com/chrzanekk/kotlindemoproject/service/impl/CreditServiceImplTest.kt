@@ -24,18 +24,18 @@ class CreditServiceImplTest {
     fun whenCreateCredit_ShouldFindCustomer_AndSaveNewCredit() {
         //given
         val savedCustomer = Customer(1L, "John", "Doe", "80808080")
-        val savedCustomerDTO =
-            CustomerDTO(savedCustomer.id, savedCustomer.firstName, savedCustomer.lastName, savedCustomer.personalNumber)
+        val newCustomerResponse =
+            SearchCustomerResponse(savedCustomer.id, savedCustomer.firstName, savedCustomer.lastName, savedCustomer.personalNumber)
 
-        val requestCredit = Credit(0L, "NewCredit", savedCustomerDTO.id, BigDecimal.valueOf(10))
+        val requestCredit = Credit(0L, "NewCredit", newCustomerResponse.id, BigDecimal.valueOf(10))
         val requestCreditDTO = CreditDTO(0L, "NewCredit", 0L, BigDecimal.valueOf(10))
         val requestCreditCustomerDTO = CustomerDTO(
             0L, savedCustomer.firstName, savedCustomer.lastName, savedCustomer.personalNumber
         )
 
-        val responseCredit = Credit(1L, "NewCredit", savedCustomerDTO.id, BigDecimal.valueOf(10))
-        val responseCreditDTO = CreditDTO(1L, "NewCredit", savedCustomerDTO.id, BigDecimal.valueOf(10))
-        every { customerService.findByPersonalNumber(SearchCustomerRequest(savedCustomerDTO.personalNumber)) } returns savedCustomerDTO
+        val responseCredit = Credit(1L, "NewCredit", newCustomerResponse.id, BigDecimal.valueOf(10))
+        val responseCreditDTO = CreditDTO(1L, "NewCredit", newCustomerResponse.id, BigDecimal.valueOf(10))
+        every { customerService.findByPersonalNumber(SearchCustomerRequest(newCustomerResponse.personalNumber)) } returns newCustomerResponse
         every { creditRepository.save(requestCredit) } returns responseCredit
 
         //when
@@ -59,7 +59,7 @@ class CreditServiceImplTest {
             requestCreditCustomerDTO.firstName, requestCreditCustomerDTO
                 .lastName, requestCreditCustomerDTO.personalNumber
         )
-        val savedCreditCustomerDTO = CustomerDTO(1L, "John", "Doe", "808080")
+        val savedCreditCustomerDTO = NewCustomerResponse(1L, "John", "Doe", "808080")
 
         val requestCredit =
             Credit(0L, requestCreditDTO.creditName, savedCreditCustomerDTO.id, requestCreditDTO.creditValue)
