@@ -1,9 +1,10 @@
-package com.chrzanekk.kotlindemoproject.service.impl
+package com.chrzanekk.kotlindemoproject.service
 
 import com.chrzanekk.kotlindemoproject.domain.Customer
 import com.chrzanekk.kotlindemoproject.payload.*
 import com.chrzanekk.kotlindemoproject.repository.CustomerRepository
 import com.chrzanekk.kotlindemoproject.service.dto.CustomerDTO
+import com.chrzanekk.kotlindemoproject.service.impl.CustomerServiceImpl
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

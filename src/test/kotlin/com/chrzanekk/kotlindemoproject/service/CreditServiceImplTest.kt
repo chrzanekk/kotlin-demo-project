@@ -1,4 +1,4 @@
-package com.chrzanekk.kotlindemoproject.service.impl
+package com.chrzanekk.kotlindemoproject.service
 
 import com.chrzanekk.kotlindemoproject.domain.Credit
 import com.chrzanekk.kotlindemoproject.domain.Customer
@@ -7,6 +7,7 @@ import com.chrzanekk.kotlindemoproject.repository.CreditRepository
 import com.chrzanekk.kotlindemoproject.service.CustomerService
 import com.chrzanekk.kotlindemoproject.service.dto.CreditDTO
 import com.chrzanekk.kotlindemoproject.service.dto.CustomerDTO
+import com.chrzanekk.kotlindemoproject.service.impl.CreditServiceImpl
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -85,8 +86,6 @@ class CreditServiceImplTest {
     @Test
     fun whenGetAllCredits_shouldReturnListOfResponseWithCreditAndCustomerDTO() {
         //given
-        val firstCreditDTO = CreditDTO(1L, "NewCredit", 1L, BigDecimal.valueOf(110))
-        val secondCreditDTO = CreditDTO(2L, "NewCredit2", 2L, BigDecimal.valueOf(220))
         val firstCustomerDTO = CustomerDTO(1L, "John", "Doe", "808080")
         val secondCustomerDTO = CustomerDTO(2L, "Jimmy", "Black", "818181")
         val customerResponse = GetCustomersResponse(mutableListOf(firstCustomerDTO, secondCustomerDTO))
@@ -95,10 +94,6 @@ class CreditServiceImplTest {
         val secondCredit = Credit(2L, "NewCredit2", 2L, BigDecimal.valueOf(220))
         val creditResponseFromDB = mutableListOf(firstCredit, secondCredit)
 
-        val firstGetCreditResponse = GetCreditResponse(firstCustomerDTO, firstCreditDTO)
-        val secondGetCreditResponse = GetCreditResponse(secondCustomerDTO, secondCreditDTO)
-
-        val getAllCredits = GetCreditsResponse(mutableListOf(firstGetCreditResponse, secondGetCreditResponse))
         val getAllCustomers = GetCustomersRequest(mutableListOf(firstCustomerDTO.id, secondCustomerDTO.id))
 
         every { creditRepository.findAll() } returns creditResponseFromDB
@@ -121,8 +116,6 @@ class CreditServiceImplTest {
     @Test
     fun whenGetAllCredits_shouldReturnListOfResponseWithCreditAndCustomerDTOButCustomerHaveTwoCredits() {
         //given
-        val firstCreditDTO = CreditDTO(1L, "NewCredit", 1L, BigDecimal.valueOf(110))
-        val secondCreditDTO = CreditDTO(2L, "NewCredit2", 1L, BigDecimal.valueOf(220))
         val firstCustomerDTO = CustomerDTO(1L, "John", "Doe", "808080")
         val customerResponse = GetCustomersResponse(mutableListOf(firstCustomerDTO))
 
@@ -130,10 +123,6 @@ class CreditServiceImplTest {
         val secondCredit = Credit(2L, "NewCredit2", 1L, BigDecimal.valueOf(220))
         val creditResponseFromDB = mutableListOf(firstCredit, secondCredit)
 
-        val firstGetCreditResponse = GetCreditResponse(firstCustomerDTO, firstCreditDTO)
-        val secondGetCreditResponse = GetCreditResponse(firstCustomerDTO, secondCreditDTO)
-
-        val getAllCredits = GetCreditsResponse(mutableListOf(firstGetCreditResponse, secondGetCreditResponse))
         val getAllCustomers = GetCustomersRequest(mutableListOf(firstCustomerDTO.id))
 
         every { creditRepository.findAll() } returns creditResponseFromDB
@@ -160,7 +149,6 @@ class CreditServiceImplTest {
 
         val creditResponseFromDB = mutableListOf<Credit>()
 
-        val getAllCredits = GetCreditsResponse(mutableListOf())
         val getAllCustomers = GetCustomersRequest(mutableListOf())
 
         every { creditRepository.findAll() } returns creditResponseFromDB
