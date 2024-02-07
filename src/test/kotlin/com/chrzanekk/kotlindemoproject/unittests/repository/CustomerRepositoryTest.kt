@@ -1,6 +1,7 @@
-package com.chrzanekk.kotlindemoproject.repository
+package com.chrzanekk.kotlindemoproject.unittests.repository
 
 import com.chrzanekk.kotlindemoproject.domain.Customer
+import com.chrzanekk.kotlindemoproject.repository.CustomerRepository
 import jakarta.persistence.EntityManager
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals

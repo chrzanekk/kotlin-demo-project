@@ -33,6 +33,10 @@ dependencies {
 	testImplementation("org.hsqldb:hsqldb:2.7.2")
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+	runtimeOnly("org.postgresql:postgresql")
+// https://mvnrepository.com/artifact/org.testcontainers/testcontainers
+	testImplementation("org.testcontainers:testcontainers:1.17.0")
+
 }
 
 tasks.withType<KotlinCompile> {

@@ -1,4 +1,4 @@
-package com.chrzanekk.kotlindemoproject.service
+package com.chrzanekk.kotlindemoproject.unittests.service
 
 import com.chrzanekk.kotlindemoproject.domain.Credit
 import com.chrzanekk.kotlindemoproject.domain.Customer

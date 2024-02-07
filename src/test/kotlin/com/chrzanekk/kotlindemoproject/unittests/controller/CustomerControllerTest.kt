@@ -1,5 +1,6 @@
-package com.chrzanekk.kotlindemoproject.controller
+package com.chrzanekk.kotlindemoproject.unittests.controller
 
+import com.chrzanekk.kotlindemoproject.controller.CustomerController
 import com.chrzanekk.kotlindemoproject.payload.*
 import com.chrzanekk.kotlindemoproject.service.CustomerService
 import com.chrzanekk.kotlindemoproject.service.dto.CustomerDTO
