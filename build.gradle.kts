@@ -32,7 +32,7 @@ dependencies {
 	}
 	testImplementation("io.mockk:mockk:1.13.8")
 	testImplementation("org.hsqldb:hsqldb:2.7.2")
-	testImplementation("org.junit.jupiter:junit-jupiter-api")
+	testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.testcontainers:testcontainers:1.17.0")

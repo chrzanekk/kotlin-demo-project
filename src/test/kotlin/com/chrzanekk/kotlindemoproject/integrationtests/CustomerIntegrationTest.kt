@@ -3,6 +3,7 @@ package com.chrzanekk.kotlindemoproject.integrationtests
 import com.chrzanekk.kotlindemoproject.domain.Customer
 import com.chrzanekk.kotlindemoproject.payload.SearchCustomerRequest
 import com.chrzanekk.kotlindemoproject.repository.CustomerRepository
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -54,6 +55,7 @@ class CustomerIntegrationTest {
         CustomerFixture(customerRepository).addMultipleCustomers()
     }
 
+
     @Test
     fun shouldFindCustomerByPersonalNumber() {
         val searchCustomerRequest = SearchCustomerRequest("808080")
@@ -67,6 +69,20 @@ class CustomerIntegrationTest {
             .expectStatus().isOk()
             .expectBody(Customer::class.java)
             .isEqualTo(expectedCustomer)
+
+    }
+
+    @Test
+    fun shouldThrowExceptionWhenNotFindCustomerByPersonalNumber() {
+        val searchCustomerRequest = SearchCustomerRequest("909090")
+
+        this.webTestClient.method(HttpMethod.GET)
+            .uri("api/customer/search")
+            .accept(MediaType.APPLICATION_JSON)
+            .body(BodyInserters.fromValue(searchCustomerRequest))
+            .exchange()
+            .expectStatus().isBadRequest()
+
 
     }
 
