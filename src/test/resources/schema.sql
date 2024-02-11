@@ -5,11 +5,6 @@ CREATE TABLE if not exists customer (
     personal_number varchar(50)
 );
 
-INSERT INTO customer values
-    ('John', 'Doe', '808080'),
-    ('Jane', 'Smith', '818181'),
-    ('Bob', 'Johnson', '828282');
-
 CREATE TABLE if not exists credit (
     id serial primary key,
     credit_name varchar(50),
