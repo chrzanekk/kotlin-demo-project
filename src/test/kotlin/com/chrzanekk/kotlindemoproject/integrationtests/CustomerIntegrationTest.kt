@@ -3,6 +3,7 @@ package com.chrzanekk.kotlindemoproject.integrationtests
 import com.chrzanekk.kotlindemoproject.domain.Customer
 import com.chrzanekk.kotlindemoproject.payload.SearchCustomerRequest
 import com.chrzanekk.kotlindemoproject.repository.CustomerRepository
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -15,6 +16,7 @@ import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
+import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
@@ -30,6 +32,7 @@ class CustomerIntegrationTest {
     @Autowired
     private lateinit var customerRepository: CustomerRepository
 
+
     companion object {
 
         @Container
@@ -37,6 +40,8 @@ class CustomerIntegrationTest {
             withDatabaseName("testDB")
             withUsername("user")
             withPassword("password")
+            withInitScript("test-db/table-init.sql")
+
         }
 
 
@@ -47,12 +52,19 @@ class CustomerIntegrationTest {
             registry.add("spring.datasource.username", container::getUsername);
         }
 
-    }
+        @JvmStatic
+        @BeforeAll
+        internal fun init() {
+//            container.withInitScript("src/test/kotlin/com/chrzanekk/kotlindemoproject/integrationtests/table-init.sql")
+            container.start()
+        }
 
-    @BeforeEach
-    fun init() {
-        customerRepository.deleteAll()
-        CustomerFixture(customerRepository).addMultipleCustomers()
+        @JvmStatic
+        @AfterAll
+        internal fun close() {
+            container.stop()
+        }
+
     }
 
 
@@ -60,7 +72,7 @@ class CustomerIntegrationTest {
     fun shouldFindCustomerByPersonalNumber() {
         val searchCustomerRequest = SearchCustomerRequest("808080")
         val expectedCustomer = Customer(1L, "John", "Doe", "808080")
-
+        val customers = customerRepository.findAll()
         this.webTestClient.method(HttpMethod.GET)
             .uri("api/customer/search")
             .accept(MediaType.APPLICATION_JSON)
