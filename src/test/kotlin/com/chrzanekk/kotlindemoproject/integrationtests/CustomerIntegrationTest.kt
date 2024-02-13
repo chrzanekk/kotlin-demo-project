@@ -7,7 +7,6 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
@@ -17,12 +16,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
-import org.testcontainers.junit.jupiter.Testcontainers
-import org.testcontainers.utility.MountableFile
 
-@Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class CustomerIntegrationTest {
 
     @Autowired
@@ -30,9 +25,12 @@ class CustomerIntegrationTest {
 
     @Autowired
     private lateinit var customerRepository: CustomerRepository
+    init {
+       val customerFixture = CustomerFixture(customerRepository)
+        customerFixture.addMultipleCustomers()
+    }
 
-
-    companion object {
+    companion object{
 
         @Container
         val container = PostgreSQLContainer<Nothing>("postgres:12").apply {
@@ -43,10 +41,11 @@ class CustomerIntegrationTest {
 
 
         @DynamicPropertySource
+        @JvmStatic
         fun properties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url", container::getJdbcUrl);
-            registry.add("spring.datasource.password", container::getPassword);
-            registry.add("spring.datasource.username", container::getUsername);
+            registry.add("spring.datasource.url", container::getJdbcUrl)
+            registry.add("spring.datasource.password", container::getPassword)
+            registry.add("spring.datasource.username", container::getUsername)
         }
 
         @JvmStatic
