@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
@@ -32,20 +33,25 @@ class CustomerIntegrationTest {
     companion object{
 
         @Container
-        val container = postgres("postgres:12") {
+        val container = postgres("12") {
             withDatabaseName("db")
             withUsername("user")
             withPassword("password")
-            withInitScript("/schema.sql")
+            withInitScript("schema.sql")
         }
 
-
+        @DynamicPropertySource
+        @JvmStatic
+        fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
+            registry.add("spring.datasource.url", container::getJdbcUrl)
+            registry.add("spring.datasource.username", container::getUsername)
+            registry.add("spring.datasource.password", container::getPassword)
+        }
     }
 
     @Test
     fun containerIsUpAndRunning() {
         Assertions.assertTrue(container.isRunning)
-
     }
 
 

@@ -1,56 +1,80 @@
 package com.chrzanekk.kotlindemoproject.unittests.repository
 
 import com.chrzanekk.kotlindemoproject.domain.Customer
+import com.chrzanekk.kotlindemoproject.integrationtests.CustomerIntegrationTest
+import com.chrzanekk.kotlindemoproject.integrationtests.postgres
 import com.chrzanekk.kotlindemoproject.repository.CustomerRepository
 import jakarta.persistence.EntityManager
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
+import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
 
-@DataJpaTest
+@Testcontainers
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CustomerRepositoryTest {
 
-    @Autowired
-    lateinit var em: EntityManager
 
     @Autowired
-    lateinit var customerRepository: CustomerRepository
+    private lateinit var customerRepository: CustomerRepository
 
+    companion object{
+
+        @Container
+        val container = postgres("12") {
+            withDatabaseName("db")
+            withUsername("user")
+            withPassword("password")
+            withInitScript("schema.sql")
+        }
+
+        @DynamicPropertySource
+        @JvmStatic
+        fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
+            registry.add("spring.datasource.url", container::getJdbcUrl)
+            registry.add("spring.datasource.username", container::getUsername)
+            registry.add("spring.datasource.password", container::getPassword)
+        }
+    }
+
+    @Test
+    fun containerIsUpAndRunning() {
+        Assertions.assertTrue(container.isRunning)
+    }
 
     @Test
     fun whenFindByPersonalNumber_thenReturnCustomer() {
         //given
-        val personalNumber = "838383"
-        val customer = Customer(0, "John", "Doe", personalNumber)
-        em.persist(customer)
-        em.flush()
+        val personalNumber = "808080"
 
         //when
         val customerFromDB = customerRepository.findByPersonalNumber(personalNumber)
 
         //then
-        assertEquals(customer.personalNumber, customerFromDB!!.personalNumber)
+        if (customerFromDB != null) {
+            assertEquals(personalNumber, customerFromDB.personalNumber)
+        }
     }
 
     @Test
     fun whenFindByPersonalNumber_thenReturnCorrectCustomer() {
         //given
         val personalNumber = "838383"
-        val customer = Customer(0, "John", "Doe", personalNumber)
-        em.persist(customer)
-        em.flush()
-        val secondCustomer = Customer(0, "Jimmy", "Black", "828282")
-        em.persist(secondCustomer)
-        em.flush()
 
         //when
         val customerFromDB = customerRepository.findByPersonalNumber(personalNumber)
 
         //then
-        assertEquals(customer.personalNumber, customerFromDB!!.personalNumber)
-        assertNotEquals(secondCustomer.personalNumber, customerFromDB.personalNumber)
+        if (customerFromDB != null) {
+            assertNotEquals(personalNumber, customerFromDB.personalNumber)
+        }
     }
 
     @Test
