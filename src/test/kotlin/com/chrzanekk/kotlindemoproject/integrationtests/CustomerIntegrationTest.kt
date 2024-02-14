@@ -4,6 +4,7 @@ import com.chrzanekk.kotlindemoproject.domain.Customer
 import com.chrzanekk.kotlindemoproject.payload.SearchCustomerRequest
 import com.chrzanekk.kotlindemoproject.repository.CustomerRepository
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +17,9 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
 
+@Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CustomerIntegrationTest {
 
@@ -25,40 +28,23 @@ class CustomerIntegrationTest {
 
     @Autowired
     private lateinit var customerRepository: CustomerRepository
-    init {
-       val customerFixture = CustomerFixture(customerRepository)
-        customerFixture.addMultipleCustomers()
-    }
 
     companion object{
 
         @Container
-        val container = PostgreSQLContainer<Nothing>("postgres:12").apply {
-            withDatabaseName("testDB")
+        val container = postgres("postgres:12") {
+            withDatabaseName("db")
             withUsername("user")
             withPassword("password")
+            withInitScript("/schema.sql")
         }
 
 
-        @DynamicPropertySource
-        @JvmStatic
-        fun properties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url", container::getJdbcUrl)
-            registry.add("spring.datasource.password", container::getPassword)
-            registry.add("spring.datasource.username", container::getUsername)
-        }
+    }
 
-        @JvmStatic
-        @BeforeAll
-        internal fun init() {
-            container.start()
-        }
-
-        @JvmStatic
-        @AfterAll
-        internal fun close() {
-            container.stop()
-        }
+    @Test
+    fun containerIsUpAndRunning() {
+        Assertions.assertTrue(container.isRunning)
 
     }
 
