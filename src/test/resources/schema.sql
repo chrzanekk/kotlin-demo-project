@@ -18,3 +18,8 @@ INSERT INTO customer (first_name, last_name, personal_number)
 values ('John', 'Doe', '808080'),
        ('Jane', 'Smith', '818181'),
        ('Bob', 'Johnson', '828282');
+
+INSERT INTO credit (credit_name, customer_id, credit_value)
+values ('FirstCreditName', (SELECT customer.id FROM customer WHERE customer.personal_number = '808080'), 10000),
+        ('SecondCreditName', (SELECT customer.id FROM customer WHERE customer.personal_number = '818181'), 20000),
+        ('ThirdCreditName', (SELECT customer.id FROM customer WHERE customer.personal_number = '828282'), 30000);
