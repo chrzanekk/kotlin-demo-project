@@ -8,7 +8,9 @@ import com.chrzanekk.kotlindemoproject.service.CustomerService
 import com.chrzanekk.kotlindemoproject.service.dto.CreditDTO
 import com.chrzanekk.kotlindemoproject.service.dto.CustomerDTO
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.stereotype.Service
 
+@Service
 class CreditServiceImpl(
     private val customerService: CustomerService,
     private val creditRepository: CreditRepository

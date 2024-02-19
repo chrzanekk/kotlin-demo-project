@@ -7,7 +7,6 @@ import com.chrzanekk.kotlindemoproject.service.dto.CustomerDTO
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.mockk.every
 import io.mockk.mockk
-import org.hamcrest.CoreMatchers.hasItem
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,7 +48,7 @@ internal class CustomerControllerTest {
 
         every { service.findByPersonalNumber(searchCustomerRequest) } returns expectedResponse
 
-        val result = mockMvc.perform(
+        mockMvc.perform(
             get("/api/customer/search")
                 .content(objectMapper.writeValueAsString(searchCustomerRequest))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -70,7 +69,7 @@ internal class CustomerControllerTest {
         every { service.findByPersonalNumber(searchCustomerRequest) } throws (EmptyResultDataAccessException
             ("Customer not found", 1))
 
-        val result = mockMvc.perform(
+        mockMvc.perform(
             get("/api/customer/search")
                 .content(objectMapper.writeValueAsString(searchCustomerRequest))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -85,7 +84,7 @@ internal class CustomerControllerTest {
 
         every { service.createCustomer(createCustomerRequest) } returns expectedResponse
 
-        val result = mockMvc.perform(
+        mockMvc.perform(
             post("/api/customer/add")
                 .content(objectMapper.writeValueAsString(createCustomerRequest))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -107,7 +106,7 @@ internal class CustomerControllerTest {
 
         every { service.findAllCustomers(findCustomersRequest) } returns expectedResponse
 
-        val result = mockMvc.perform(
+        mockMvc.perform(
             get("/api/customer/filtered")
                 .content(objectMapper.writeValueAsString(findCustomersRequest))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -131,7 +130,7 @@ internal class CustomerControllerTest {
 
         every { service.findAllCustomers(findCustomersRequest) } returns expectedResponse
 
-        val result = mockMvc.perform(
+        mockMvc.perform(
             get("/api/customer/filtered")
                 .content(objectMapper.writeValueAsString(findCustomersRequest))
                 .contentType(MediaType.APPLICATION_JSON)
