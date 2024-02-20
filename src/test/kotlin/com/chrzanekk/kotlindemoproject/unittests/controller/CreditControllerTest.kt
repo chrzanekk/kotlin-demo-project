@@ -74,7 +74,7 @@ internal class CreditControllerTest {
     }
 
     @Test
-    fun requestToFindAllCredits() {
+    fun requestToFindAllCreditsByListOfIdsShouldReturnCredits() {
         val firstCustomerDTO = CustomerDTO(1L, "John", "Doe", "808080")
         val secondCustomerDTO = CustomerDTO(2L, "Jimmy", "Black", "818181")
 

@@ -5,6 +5,7 @@ import com.chrzanekk.kotlindemoproject.payload.*
 import com.chrzanekk.kotlindemoproject.repository.CustomerRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -16,10 +17,11 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import java.time.Duration
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CustomerIntegrationTest :AbstractTestconteinersIntegrationTest() {
+class CustomerIntegrationTest {
 
     @Autowired
     private lateinit var webTestClient: WebTestClient
@@ -27,12 +29,35 @@ class CustomerIntegrationTest :AbstractTestconteinersIntegrationTest() {
     @Autowired
     private lateinit var customerRepository: CustomerRepository
 
+    companion object {
+
+        @Container
+        val container = postgres("12") {
+            withDatabaseName("db")
+            withUsername("user")
+            withPassword("password")
+            withInitScript("schema.sql")
+        }
+
+        @DynamicPropertySource
+        @JvmStatic
+        fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
+            registry.add("spring.datasource.url", container::getJdbcUrl)
+            registry.add("spring.datasource.username", container::getUsername)
+            registry.add("spring.datasource.password", container::getPassword)
+        }
+    }
+
+    @Test
+    fun containerIsUpAndRunning() {
+        Assertions.assertTrue(container.isRunning)
+    }
 
     @Test
     fun shouldFindCustomerByPersonalNumber() {
         val searchCustomerRequest = SearchCustomerRequest("808080")
         val expectedCustomer = Customer(1L, "John", "Doe", "808080")
-        val customers = customerRepository.findAll()
+
         this.webTestClient.method(HttpMethod.GET)
             .uri("api/customer/search")
             .accept(MediaType.APPLICATION_JSON)

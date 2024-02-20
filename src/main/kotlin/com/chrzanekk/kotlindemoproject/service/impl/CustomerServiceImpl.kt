@@ -5,6 +5,7 @@ import com.chrzanekk.kotlindemoproject.payload.*
 import com.chrzanekk.kotlindemoproject.repository.CustomerRepository
 import com.chrzanekk.kotlindemoproject.service.CustomerService
 import com.chrzanekk.kotlindemoproject.service.dto.CustomerDTO
+import jakarta.transaction.Transactional
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 
@@ -13,6 +14,7 @@ class CustomerServiceImpl(
     private val customerRepository: CustomerRepository
 ) : CustomerService {
 
+    @Transactional(dontRollbackOn = [EmptyResultDataAccessException::class])
     override fun findByPersonalNumber(searchCustomerRequest: SearchCustomerRequest): SearchCustomerResponse {
         val customer: Customer = customerRepository.findByPersonalNumber(searchCustomerRequest.personalNumber)
             ?: throw EmptyResultDataAccessException("Customer not found", 1)
@@ -20,6 +22,8 @@ class CustomerServiceImpl(
             .personalNumber)
     }
 
+
+    @Transactional
     override fun createCustomer(newCustomerRequest: NewCustomerRequest): NewCustomerResponse {
 
         val customer = customerRepository.save(
@@ -31,7 +35,7 @@ class CustomerServiceImpl(
         return NewCustomerResponse(customer.id, customer.firstName, customer.lastName, customer
             .personalNumber)
     }
-
+    @Transactional
     override fun findAllCustomers(customerIds: GetCustomersRequest): GetCustomersResponse {
         val customerList = customerRepository.findAllById(customerIds.customerIds)
         val customerDTOS: ArrayList<CustomerDTO> = ArrayList()

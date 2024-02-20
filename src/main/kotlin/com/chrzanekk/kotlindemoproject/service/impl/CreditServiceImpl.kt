@@ -7,6 +7,7 @@ import com.chrzanekk.kotlindemoproject.service.CreditService
 import com.chrzanekk.kotlindemoproject.service.CustomerService
 import com.chrzanekk.kotlindemoproject.service.dto.CreditDTO
 import com.chrzanekk.kotlindemoproject.service.dto.CustomerDTO
+import jakarta.transaction.Transactional
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 
@@ -15,6 +16,9 @@ class CreditServiceImpl(
     private val customerService: CustomerService,
     private val creditRepository: CreditRepository
 ) : CreditService {
+
+
+    @Transactional
     override fun createCredit(newCreditRequest: NewCreditRequest): NewCreditResponse {
         val customerDTO: CustomerDTO = try {
             val searchCustomerResponse = customerService.findByPersonalNumber(
@@ -60,6 +64,7 @@ class CreditServiceImpl(
         }
     }
 
+    @Transactional
     override fun findAll(): GetCreditsResponse {
         val creditDTOList = convertEntityToDTO(creditRepository.findAll())
         val customerIds: List<Long> = creditDTOList.map { it.customerId }.distinct()
