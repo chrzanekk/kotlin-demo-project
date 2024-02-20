@@ -19,7 +19,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CustomerIntegrationTest {
+class CustomerIntegrationTest :AbstractTestconteinersIntegrationTest() {
 
     @Autowired
     private lateinit var webTestClient: WebTestClient
@@ -27,29 +27,29 @@ class CustomerIntegrationTest {
     @Autowired
     private lateinit var customerRepository: CustomerRepository
 
-    companion object {
+//    companion object {
+//
+//        @Container
+//        val container = postgres("12") {
+//            withDatabaseName("db")
+//            withUsername("user")
+//            withPassword("password")
+//            withInitScript("schema.sql")
+//        }
+//
+//        @DynamicPropertySource
+//        @JvmStatic
+//        fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
+//            registry.add("spring.datasource.url", container::getJdbcUrl)
+//            registry.add("spring.datasource.username", container::getUsername)
+//            registry.add("spring.datasource.password", container::getPassword)
+//        }
+//    }
 
-        @Container
-        val container = postgres("12") {
-            withDatabaseName("db")
-            withUsername("user")
-            withPassword("password")
-            withInitScript("schema.sql")
-        }
-
-        @DynamicPropertySource
-        @JvmStatic
-        fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url", container::getJdbcUrl)
-            registry.add("spring.datasource.username", container::getUsername)
-            registry.add("spring.datasource.password", container::getPassword)
-        }
-    }
-
-    @Test
-    fun containerIsUpAndRunning() {
-        Assertions.assertTrue(container.isRunning)
-    }
+//    @Test
+//    fun containerIsUpAndRunning() {
+//        Assertions.assertTrue(container.isRunning)
+//    }
 
 
     @Test
